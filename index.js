@@ -39,6 +39,54 @@ function insert(root, key) {
 root = insert(root, 6);
 root = insert(root, 2);
 
+function getSuccessor(curr) {
+  curr = curr.right;
+  while (curr !== null && curr.left !== null) curr = curr.left;
+  return curr;
+}
+
+function delNode(root, x) {
+  if (root === null) return root;
+
+  if (root.data > x) root.left = delNode(root.left, x);
+  else if (root.data < x) root.right = delNode(root.right, x);
+  else {
+    // Node with 0 or 1 child
+    if (root.left === null) return root.right;
+    if (root.right === null) return root.left;
+
+    // Node with 2 children
+    const succ = getSuccessor(root);
+    root.data = succ.data;
+    root.right = delNode(root.right, succ.data);
+  }
+  return root;
+}
+
+function find(root, value) {
+  if (root == null) return null;
+  if (root.data === value) return root;
+  return find(root.left, value) || find(root.right, value);
+}
+
+function levelOrderForEach(root, callback) {
+  if (typeof callback !== "function") {
+    throw new Error("A callback function is required");
+  }
+  if (!root) return;
+  const q = [root];
+  let i = 0;
+  while (i < q.length) {
+    const n = q[i++];
+    callback(n);
+    if (n.left) q.push(n.left);
+    if (n.right) q.push(n.right);
+  }
+}
+const out = [];
+levelOrderForEach(root, (n) => out.push(n.data));
+console.log(out);
+
 function mergeSort(arr) {
   if (arr.length <= 1) return arr;
 
