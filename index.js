@@ -1,7 +1,8 @@
 const arrayUnsorted = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 const arraySorted = mergeSort(arrayUnsorted);
 const array = [...new Set(arraySorted)];
-const root = buildTree(array, 0, array.length - 1);
+let root = tree(array);
+
 function node(data) {
   return {
     data,
@@ -11,9 +12,7 @@ function node(data) {
 }
 
 function tree(arr) {
-  return {
-    root: buildTree(arr, start, end),
-  };
+  return buildTree(arr, 0, arr.length - 1);
 }
 
 function buildTree(arr, start, end) {
@@ -27,6 +26,18 @@ function buildTree(arr, start, end) {
 
   return root;
 }
+
+function insert(root, key) {
+  if (root === null) return node(key);
+
+  if (key < root.data) root.left = insert(root.left, key);
+  else root.right = insert(root.right, key);
+
+  return root;
+}
+
+root = insert(root, 6);
+root = insert(root, 2);
 
 function mergeSort(arr) {
   if (arr.length <= 1) return arr;
