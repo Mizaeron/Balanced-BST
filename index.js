@@ -3,6 +3,34 @@ const arraySorted = mergeSort(arrayUnsorted);
 const array = [...new Set(arraySorted)];
 let root = tree(array);
 
+function mergeSort(arr) {
+  if (arr.length <= 1) return arr;
+
+  const mid = Math.ceil(arr.length / 2);
+  const left = mergeSort(arr.slice(0, mid)); // store slice
+  const right = mergeSort(arr.slice(mid)); // store slice
+
+  // merge left and right (example)
+  const merged = [];
+  while (left.length && right.length) {
+    merged.push(left[0] <= right[0] ? left.shift() : right.shift());
+  }
+  return merged.concat(left, right);
+}
+
+const prettyPrint = (node, prefix = "", isLeft = true) => {
+  if (node === null) {
+    return;
+  }
+  if (node.right !== null) {
+    prettyPrint(node.right, `${prefix}${isLeft ? "│   " : "    "}`, false);
+  }
+  console.log(`${prefix}${isLeft ? "└── " : "┌── "}${node.data}`);
+  if (node.left !== null) {
+    prettyPrint(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
+  }
+};
+
 function node(data) {
   return {
     data,
@@ -85,34 +113,15 @@ function levelOrderForEach(root, callback) {
 }
 const out = [];
 levelOrderForEach(root, (n) => out.push(n.data));
-console.log(out);
-
-function mergeSort(arr) {
-  if (arr.length <= 1) return arr;
-
-  const mid = Math.ceil(arr.length / 2);
-  const left = mergeSort(arr.slice(0, mid)); // store slice
-  const right = mergeSort(arr.slice(mid)); // store slice
-
-  // merge left and right (example)
-  const merged = [];
-  while (left.length && right.length) {
-    merged.push(left[0] <= right[0] ? left.shift() : right.shift());
-  }
-  return merged.concat(left, right);
+// console.log(out);
+function preOrderForEach(root, callback) {
+  if (root === null) return;
+  // const n = root;
+  callback(root);
+  preOrderForEach(root.left, callback);
+  preOrderForEach(root.right, callback);
 }
 
-const prettyPrint = (node, prefix = "", isLeft = true) => {
-  if (node === null) {
-    return;
-  }
-  if (node.right !== null) {
-    prettyPrint(node.right, `${prefix}${isLeft ? "│   " : "    "}`, false);
-  }
-  console.log(`${prefix}${isLeft ? "└── " : "┌── "}${node.data}`);
-  if (node.left !== null) {
-    prettyPrint(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
-  }
-};
+preOrderForEach(root, (n) => console.log(n.data));
 
 prettyPrint(root);
