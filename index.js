@@ -115,13 +115,36 @@ const out = [];
 levelOrderForEach(root, (n) => out.push(n.data));
 // console.log(out);
 function preOrderForEach(root, callback) {
+  if (typeof callback !== "function") {
+    throw new Error("A callback function is required");
+  }
   if (root === null) return;
-  // const n = root;
   callback(root);
   preOrderForEach(root.left, callback);
   preOrderForEach(root.right, callback);
 }
 
-preOrderForEach(root, (n) => console.log(n.data));
+function inOrderForEach(root, callback) {
+  if (typeof callback !== "function") {
+    throw new Error("A callback function is required");
+  }
+  if (root === null) return;
+  inOrderForEach(root.left, callback);
+  callback(root);
+  inOrderForEach(root.right, callback);
+}
+
+function postOrderForEach(root, callback) {
+  if (typeof callback !== "function") {
+    throw new Error("A callback function is required");
+  }
+  if (root === null) return;
+  postOrderForEach(root.left, callback);
+
+  postOrderForEach(root.right, callback);
+  callback(root);
+}
+
+postOrderForEach(root, (n) => console.log(n.data));
 
 prettyPrint(root);
