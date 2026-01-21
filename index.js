@@ -140,11 +140,30 @@ function postOrderForEach(root, callback) {
   }
   if (root === null) return;
   postOrderForEach(root.left, callback);
-
   postOrderForEach(root.right, callback);
   callback(root);
 }
 
-postOrderForEach(root, (n) => console.log(n.data));
+function height(node) {
+  if (node === null) return 0;
+  return 1 + Math.max(height(node.left), height(node.right));
+}
+
+function heightOfValue(root, value) {
+  const node = find(root, value);
+  if (!node) return null;
+  return height(node);
+}
+
+function depthOfValue_edges(root, value) {
+  function dfs(node, depth) {
+    if (node == null) return null;
+    if (node.data === value) return depth;
+    return dfs(node.left, depth + 1) ?? dfs(node.right, depth + 1);
+  }
+  return dfs(root, 0);
+}
+
+console.log(depthOfValue_edges(root, 67));
 
 prettyPrint(root);
